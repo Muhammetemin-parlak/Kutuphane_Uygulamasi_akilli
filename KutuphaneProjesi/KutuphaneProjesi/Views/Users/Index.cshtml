@@ -1,0 +1,123 @@
+﻿@model PaginatedList<KutuphaneProjesi.Models.User>
+
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">👥 Kullanıcı Listesi</h3>
+
+            <form asp-action="Index" method="get" class="d-flex">
+                <input type="text" name="searchString" class="form-control form-control-sm me-2"
+                       placeholder="Ad veya E-Posta ara..." value="@ViewData["CurrentFilter"]" style="width: 200px;" />
+                <button type="submit" class="btn btn-sm btn-light text-primary">Ara</button>
+            </form>
+
+            @if (User.IsInRole("Personel"))
+            {
+                <span class="badge bg-warning text-dark ms-2">Gözlemci Modu (Yetki Sınırlı)</span>
+            }
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>📧 E-Posta (Mail)</th>
+                            <th>Kayıt Tarihi</th>
+                            <th>Durum</th>
+                            <th>Rol Yönetimi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">@(user.FirstName + " " + user.LastName)</td>
+                                <td class="text-primary">@user.Email</td>
+                                <td>@user.CreatedAt.ToString("dd.MM.yyyy")</td>
+                                <td>
+                                    @if (user.IsActive)
+                                    {
+                                        <span class="badge bg-success">Aktif</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Pasif</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <form asp-action="ChangeRole" method="post" class="d-flex gap-2 align-items-center">
+                                            <input type="hidden" name="userId" value="@user.Id" />
+
+                                            <select name="newRole" class="form-select form-select-sm" style="width: 140px;">
+                                                <!option value="User" @(user.Role == "User" ? "selected" : "")>Okuyucu</!option>
+                                                <!option value="Personel" @(user.Role == "Personel" ? "selected" : "")>Personel</!option>
+                                                <!option value="Admin" @(user.Role == "Admin" ? "selected" : "")>Yönetici</!option>
+                                            </select>
+
+                                            <button type="submit" class="btn btn-sm btn-outline-primary">Kaydet</button>
+
+                                            @if (user.IsActive)
+                                            {
+                                                <a asp-action="DeleteUser" asp-route-id="@user.Id" class="btn btn-sm btn-danger" onclick="return confirm('Bu kullanıcıyı pasife almak istediğinize emin misiniz?')">Pasif Yap</a>
+                                            }
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        @if (user.Role == "Admin")
+                                        {
+                                            <span class="badge bg-danger">Yönetici</span>
+                                        }
+                                        else if (user.Role == "Personel")
+                                        {
+                                            <span class="badge bg-warning text-dark">Personel</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Okuyucu</span>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @{
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            }
+
+            <div class="d-flex justify-content-center mt-3">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   class="btn btn-outline-primary me-2 @prevDisabled">
+                    <i class="fa-solid fa-chevron-left"></i> Önceki
+                </a>
+
+                <span class="align-self-center mx-2 fw-bold">
+                    Sayfa @Model.PageIndex / @Model.TotalPages
+                </span>
+
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   class="btn btn-outline-primary ms-2 @nextDisabled">
+                    Sonraki <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

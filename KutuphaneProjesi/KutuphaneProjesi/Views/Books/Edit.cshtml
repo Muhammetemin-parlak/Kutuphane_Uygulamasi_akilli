@@ -1,0 +1,78 @@
+﻿@model KutuphaneProjesi.Models.Book
+@{
+    ViewData["Title"] = "Kitap Düzenle";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-white py-3" style="background: linear-gradient(135deg, #DC0000 0%, #FF3838 100%);">
+                    <h3 class="card-title mb-0 fw-bold">
+                        <i class="bi bi-pencil-square me-2"></i>Kitabı Düzenle
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="IsDeleted" />
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-book me-2"></i>Kitap Adı
+                            </label>
+                            <input type="text" class="form-control form-control-lg" asp-for="Title" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-person-badge me-2"></i>Yazar
+                                </label>
+                                <select class="form-select form-select-lg" asp-for="AuthorId" asp-items="ViewBag.Authors"></select>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-folder me-2"></i>Kategori
+                                </label>
+                                <select class="form-select form-select-lg" asp-for="CategoryId" asp-items="ViewBag.Categories"></select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-file-text me-2"></i>Sayfa Sayısı
+                                </label>
+                                <input type="number" class="form-control form-control-lg" asp-for="PageCount" />
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-calendar me-2"></i>Yayın Yılı
+                                </label>
+                                <input type="number" class="form-control form-control-lg" asp-for="PublishYear" />
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-box-seam me-2"></i>Stok Adedi
+                            </label>
+                            <input type="number" class="form-control form-control-lg" asp-for="StockQuantity" required />
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/Books" class="btn btn-secondary me-md-2">
+                                <i class="bi bi-x-circle me-2"></i>İptal
+                            </a>
+                            <button type="submit" class="btn btn-warning text-white">
+                                <i class="bi bi-check-circle me-2"></i>Güncelle
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

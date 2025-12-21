@@ -1,0 +1,62 @@
+﻿@model KutuphaneProjesi.Models.Loan
+
+@{
+    ViewData["Title"] = "Kitap Ödünç Al";
+}
+
+<div class="container mt-4">
+    <div class="card shadow" style="max-width: 600px; margin: auto;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">📖 Ödünç Alma İşlemi</h4>
+        </div>
+        <div class="card-body">
+
+            <form asp-action="Create">
+                <input type="hidden" asp-for="BookId" />
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Seçilen Kitap:</label>
+                    <input type="text" class="form-control bg-light" value="@(ViewBag.BookTitle ?? "Kitap Bulunamadı")" readonly />
+                </div>
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Personel"))
+                {
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Kullanıcı Seçiniz:</label>
+                        <select asp-for="UserId" class="form-select" asp-items="ViewBag.UserId">
+                            <option value="">-- Lütfen Üye Seçin --</option>
+                        </select>
+                        <span asp-validation-for="UserId" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Ödünç Alan:</label>
+                        <input type="text" class="form-control" value="@(User.Identity?.Name ?? "Misafir") (Kendim)" disabled />
+                    </div>
+                }
+
+                <div class="mb-3">
+                    <label asp-for="DueDate" class="form-label fw-bold">Son Teslim Tarihi ve Saati</label>
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("Personel"))
+                    {
+                        <input asp-for="DueDate" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                    }
+                    else
+                    {
+                        <input asp-for="DueDate" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" readonly />
+                        <small class="text-muted">Test amaçlı ödünç süresi 1 dakikadır.</small>
+                    }
+                    <span asp-validation-for="DueDate" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success btn-lg">✅ Onayla ve Ödünç Al</button>
+                    <a asp-controller="Books" asp-action="Index" class="btn btn-secondary">İptal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

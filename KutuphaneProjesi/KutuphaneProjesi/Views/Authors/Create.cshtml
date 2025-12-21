@@ -1,0 +1,55 @@
+﻿@model KutuphaneProjesi.Models.Author
+
+@{
+    ViewData["Title"] = "Yeni Yazar Ekle";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-white py-3" style="background: linear-gradient(135deg, #050E3C 0%, #002455 100%);">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="bi bi-person-badge me-2"></i>Yeni Yazar Ekle
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="FullName" class="form-label fw-bold">
+                                <i class="bi bi-person me-2"></i>Yazar Adı Soyadı
+                            </label>
+                            <input asp-for="FullName" class="form-control form-control-lg" placeholder="Örn: Yaşar Kemal" />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Bio" class="form-label fw-bold">
+                                <i class="bi bi-file-text me-2"></i>Biyografi (Kısa Bilgi)
+                            </label>
+                            <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Yazar hakkında kısa bilgi..."></textarea>
+                            <span asp-validation-for="Bio" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary me-md-2">
+                                <i class="bi bi-x-circle me-2"></i>İptal / Listeye Dön
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-2"></i>Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

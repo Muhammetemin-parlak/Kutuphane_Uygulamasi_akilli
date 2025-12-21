@@ -1,0 +1,63 @@
+﻿@model KutuphaneProjesi.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Kayıt Ol";
+}
+
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+        <div class="col-md-5 col-lg-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-center text-white py-4" style="background: linear-gradient(135deg, #002455 0%, #050E3C 100%);">
+                    <i class="bi bi-person-plus" style="font-size: 3rem;"></i>
+                    <h3 class="mt-3 mb-0 fw-bold">Yeni Üye Kaydı</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-bold">
+                                <i class="bi bi-envelope me-2"></i>E-Posta
+                            </label>
+                            <input asp-for="Email" class="form-control form-control-lg" placeholder="ornek@mail.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label fw-bold">
+                                <i class="bi bi-lock me-2"></i>Şifre
+                            </label>
+                            <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="••••••••" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label fw-bold">
+                                <i class="bi bi-lock-fill me-2"></i>Şifre Tekrar
+                            </label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control form-control-lg" placeholder="••••••••" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-lg text-white fw-bold" style="background: linear-gradient(135deg, #002455 0%, #050E3C 100%);">
+                                <i class="bi bi-person-plus me-2"></i>Kayıt Ol
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center bg-light py-3">
+                    <span class="text-muted">Zaten üye misin? </span>
+                    <a asp-action="Login" class="text-decoration-none fw-bold" style="color: #002455;">Giriş Yap</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

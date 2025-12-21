@@ -1,0 +1,70 @@
+﻿@model KutuphaneProjesi.Models.User
+@{
+    ViewData["Title"] = "Profilim";
+    var activeLoans = Model.Loans.Where(l => l.ReturnDate == null).OrderBy(l => l.DueDate).ToList();
+    var pastLoans = Model.Loans.Where(l => l.ReturnDate != null).OrderByDescending(l => l.ReturnDate).ToList();
+    var totalDebt = Model.Loans.Sum(l => l.FineAmount ?? 0);
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm text-center p-3">
+                <i class="fa-solid fa-circle-user text-primary mb-3" style="font-size: 80px;"></i>
+                <h4>@Model.FirstName @Model.LastName</h4>
+                <p class="text-muted">@Model.Email</p>
+                <div class="p-3 rounded @(totalDebt > 0 ? "bg-danger text-white" : "bg-light text-success")">
+                    <h5>Toplam Borç</h5>
+                    <h2 class="fw-bold m-0">@totalDebt.ToString("C2")</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#active">📚 Elimdeki Kitaplar</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#history">🕰️ Geçmiş</button></li>
+                    </ul>
+                </div>
+                <div class="card-body tab-content">
+                    <div class="tab-pane fade show active" id="active">
+                        <table class="table table-hover">
+                            <thead><tr><th>Kitap</th><th>Bitiş</th><th>Durum</th></tr></thead>
+                            <tbody>
+                                @foreach (var item in activeLoans)
+                                {
+                                    bool isLate = item.DueDate < DateTime.Now;
+                                    <tr class="@(isLate ? "table-danger" : "")">
+                                        <td>@item.Book?.Title</td>
+                                        <td>@item.DueDate?.ToString("dd.MM HH:mm") @if(isLate){
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    }
+</td>
+                                    <td>@item.Status</td>
+                                </tr>
+                                                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="history">
+                        <table class="table table-sm text-muted">
+                            <thead><tr><th>Kitap</th><th>İade Tarihi</th><th>Ceza</th></tr></thead>
+                            <tbody>
+                                @foreach (var item in pastLoans)
+                                {
+                                    <tr>
+                                        <td>@item.Book?.Title</td>
+                                        <td>@item.ReturnDate?.ToString("dd.MM.yyyy")</td>
+                                        <td>@(item.FineAmount > 0 ? item.FineAmount + " ₺" : "Yok")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
